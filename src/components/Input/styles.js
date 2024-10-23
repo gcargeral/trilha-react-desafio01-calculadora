@@ -26,4 +26,8 @@ export const InputContainer = styled.div`
         font-family: 'Roboto';
         color: #FFFFFF;
     }
+
+    .small {
+        font-size: 18px;
+    }
 `

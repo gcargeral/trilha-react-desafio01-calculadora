@@ -18,63 +18,76 @@ const App = () => {
   };
 
   const handleAddNumber = (num) => {
+    if (num === '.'){
+      if (currentNumber.indexOf('.') !== -1) {
+        return
+      }
+    }
     setCurrentNumber(prev => `${prev === '0' ? '' : prev}${num}`)
   }
 
-  const handleSumNumbers = () => {
+  const calcOperation = () => {
+    if (operation === '') {      
+    } else if (operation === '+') {
+      return  Number(firstNumber) + Number(currentNumber)
+    } else if (operation === '-') {
+      return  Number(firstNumber) - Number(currentNumber)
+    } else if (operation === 'x') {
+      return  Number(firstNumber) * Number(currentNumber)
+    } else if (operation === '/') {
+      if (currentNumber === 0) { return 0 }
+      return  Number(firstNumber) / Number(currentNumber)
+    } 
+    return 0;    
+  }
 
-    if(firstNumber === '0'){
+  const mountOperation = (oper) => {
+    if (operation === ''){
+      if (currentNumber !== '0'){
         setFirstNumber(String(currentNumber));
         setCurrentNumber('0')
-        setOperation('+')
-    }else {
-      const sum = Number(firstNumber) + Number(currentNumber);
-      setCurrentNumber(String(sum))
-      setOperation('')
+      }       
+    } else {
+      if(currentNumber !== '0'){ 
+        const result = calcOperation();
+        setFirstNumber(String(result));
+        setCurrentNumber('0')
+      }
+      //else {} //add oper
     }
+    setOperation(oper);
+  }
 
+  const handleSumNumbers = () => {
+    mountOperation('+')
   }
 
   const handleMinusNumbers = () => {
+    mountOperation('-')
+  }
 
-    if(firstNumber === '0'){
-        setFirstNumber(String(currentNumber));
-        setCurrentNumber('0')
-        setOperation('-')
-    }else {
-      const sum = Number(firstNumber) - Number(currentNumber);
-      setCurrentNumber(String(sum))
-      setOperation('')
-    }
+  const handleTimesNumbers = () => {
+    mountOperation('x')
+  }
 
+  const handleDividNumbers = () => {
+    mountOperation('/')
   }
 
   const handleEquals = () => {
-
-    if(firstNumber !== '0' && operation !== '' && currentNumber !== '0'){
-        switch(operation){
-          case '+':
-            handleSumNumbers();
-            break;
-          case '-':
-            handleMinusNumbers();
-            break;
-          default: 
-            break;
-        }
-    }
-
+    mountOperation('')    
   }
 
   return (
     <Container>
       <Content>
-        <Input value={currentNumber}/>
+        <Input value={firstNumber + ' ' + operation} />
+        <Input value={currentNumber} className="small"/>
         <Row>
-          <Button label="x"/>
-          <Button label="/"/>
+          <Button label="x" onClick={handleTimesNumbers}/>
+          <Button label="/" onClick={handleDividNumbers}/>
           <Button label="c" onClick={handleOnClear}/>
-          <Button label="."/>
+          <Button label="." onClick={() => handleAddNumber('.')}/>
         </Row>
         <Row>
           <Button label="7" onClick={() => handleAddNumber('7')}/>
